@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Shop — Commande ton maillot</title>
+
+<!--
+  ==========================================================
+  PIXEL META : remplace YOUR_PIXEL_ID par ton vrai ID de pixel
+  (Gestionnaire d'événements Meta > Pixels > ton pixel > ID)
+  ==========================================================
+-->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2041798790034263');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2041798790034263&ev=PageView&noscript=1"
+/></noscript>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --pitch-dark:#0D2818;
+    --pitch:#153D28;
+    --grass:#3FA66A;
+    --grass-light:#6FCB93;
+    --gold:#D8A32B;
+    --paper:#F7F5EF;
+    --ink:#10231C;
+    --ink-soft:#4A5C52;
+    --line:#D9D4C6;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Manrope',sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .display{
+    font-family:'Bebas Neue',sans-serif;
+    letter-spacing:0.02em;
+    line-height:0.95;
+  }
+
+  a{color:inherit;}
+
+  /* ---------- HEADER ---------- */
+  header{
+    background:var(--pitch-dark);
+    color:var(--paper);
+    padding:18px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  header .mark{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:1.5rem;
+    letter-spacing:0.06em;
+  }
+  header .mark span{color:var(--grass-light);}
+  header .loc{
+    font-size:0.72rem;
+    color:#A9BDB0;
+    text-align:right;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(63,166,106,0.35), transparent 45%),
+      linear-gradient(180deg, var(--pitch-dark) 0%, var(--pitch) 100%);
+    color:var(--paper);
+    padding:28px 22px 34px;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 64px);
+    pointer-events:none;
+  }
+  .hero-content{position:relative;max-width:520px;margin:0 auto;}
+  .hero h1{
+    font-size:2.2rem;
+    max-width:12ch;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--grass-light);
+  }
+  .hero p{
+    margin-top:10px;
+    color:#CFE0D5;
+    font-size:0.95rem;
+    max-width:38ch;
+  }
+  .hero-cue{
+    margin-top:16px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:0.85rem;
+    color:var(--gold);
+    font-weight:700;
+  }
+  .hero-cue svg{width:16px;height:16px;animation:bounce 1.6s infinite;}
+  @keyframes bounce{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(5px);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .hero-cue svg{animation:none;}
+  }
+
+  /* ---------- FORM SECTION ---------- */
+  main{
+    max-width:520px;
+    margin:0 auto;
+    padding:0 18px 60px;
+  }
+
+  .ticket{
+    background:#fff;
+    margin-top:-28px;
+    position:relative;
+    border-radius:10px;
+    box-shadow:0 12px 30px rgba(13,40,24,0.18);
+    padding:8px 0 0;
+  }
+  .ticket::before{
+    content:"";
+    display:block;
+    height:10px;
+    background-image:radial-gradient(circle, var(--paper) 5px, transparent 5.5px);
+    background-size:20px 10px;
+    background-position:0 -5px;
+    background-repeat:repeat-x;
+  }
+
+  .field-block{
+    padding:18px 22px;
+    border-bottom:1px dashed var(--line);
+  }
+  .field-block:last-of-type{border-bottom:none;}
+
+  .field-num{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:0.95rem;
+    color:var(--grass);
+    letter-spacing:0.08em;
+    display:block;
+    margin-bottom:6px;
+  }
+
+  label.field-label{
+    display:block;
+    font-weight:800;
+    font-size:1rem;
+    margin-bottom:2px;
+  }
+  .field-hint{
+    font-size:0.8rem;
+    color:var(--ink-soft);
+    margin-bottom:9px;
+  }
+
+  input[type="text"], input[type="tel"]{
+    width:100%;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:11px 14px;
+    font-family:'Manrope',sans-serif;
+    font-size:1rem;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  input:focus{
+    outline:none;
+    border-color:var(--grass);
+    box-shadow:0 0 0 3px rgba(63,166,106,0.2);
+  }
+
+  .pill-group{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .pill{
+    flex:1;
+    min-width:120px;
+    position:relative;
+  }
+  .pill input{
+    position:absolute;
+    opacity:0;
+    inset:0;
+    cursor:pointer;
+  }
+  .pill span{
+    display:block;
+    text-align:center;
+    padding:10px 10px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    font-weight:700;
+    color:var(--ink-soft);
+    transition:border-color .15s, color .15s, background .15s;
+  }
+  .pill input:checked + span{
+    border-color:var(--grass);
+    background:rgba(63,166,106,0.1);
+    color:var(--pitch);
+  }
+  .pill input:focus-visible + span{
+    outline:2px solid var(--grass);
+    outline-offset:2px;
+  }
+
+  .sub-fields{
+    margin-top:10px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    transition:max-height .3s ease, opacity .3s ease;
+  }
+  .sub-fields.open{
+    max-height:220px;
+    opacity:1;
+  }
+  @media (min-width:420px){
+    .sub-fields{grid-template-columns:1fr 1fr;}
+  }
+
+  .badge{
+    margin-top:10px;
+    display:none;
+    align-items:flex-start;
+    gap:10px;
+    padding:12px 14px;
+    border-radius:8px;
+    font-size:0.88rem;
+    font-weight:600;
+  }
+  .badge.show{display:flex;}
+  .badge.fast{
+    background:rgba(63,166,106,0.12);
+    color:var(--pitch);
+    border:1px solid rgba(63,166,106,0.35);
+  }
+  .badge.standard{
+    background:rgba(216,163,43,0.14);
+    color:#8A6512;
+    border:1px solid rgba(216,163,43,0.4);
+  }
+  .badge svg{flex-shrink:0;width:18px;height:18px;margin-top:1px;}
+
+  .submit-wrap{
+    padding:16px 22px 24px;
+  }
+  button.cta{
+    width:100%;
+    background:var(--grass);
+    color:#fff;
+    border:none;
+    border-radius:9px;
+    padding:16px;
+    font-family:'Manrope',sans-serif;
+    font-weight:800;
+    font-size:1.05rem;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    transition:background .15s, transform .1s;
+  }
+  button.cta:hover{background:#369159;}
+  button.cta:active{transform:scale(0.98);}
+  button.cta svg{width:20px;height:20px;}
+
+  .reassure{
+    text-align:center;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    margin-top:12px;
+  }
+
+  footer{
+    text-align:center;
+    padding:16px 20px 24px;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+  }
+
+  .error-msg{
+    color:#B3261E;
+    font-size:0.82rem;
+    margin-top:6px;
+    display:none;
+  }
+  .error-msg.show{display:block;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="mark">Family <span>Shop</span></div>
+  <div class="loc">Basé à Douala<br>Livraison partout au Cameroun</div>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="display">Ton maillot,<br><em>ton équipe</em>,<br>ta touche.</h1>
+    <p>Dis-nous ce que tu veux porter. On prépare ta commande et on finalise directement avec toi sur WhatsApp.</p>
+    <div class="hero-cue">
+      Remplis la fiche ci-dessous
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+  </div>
+</section>
+
+<main>
+  <form class="ticket" id="cafootForm" novalidate>
+
+    <div class="field-block">
+      <span class="field-num">01 — LE MAILLOT</span>
+      <label class="field-label" for="equipe">Quelle équipe ?</label>
+      <div class="field-hint">Ex : Cameroun, PSG, Real Madrid, Manchester City…</div>
+      <input type="text" id="equipe" name="equipe" required>
+      <div class="error-msg" id="err-equipe">Dis-nous quelle équipe t'intéresse.</div>
+    </div>
+
+    <div class="field-block">
+      <span class="field-num">02 — LA VERSION</span>
+      <label class="field-label">Fan ou joueur ?</label>
+      <div class="field-hint">La version joueur est plus près du coupe et du tissu porté sur le terrain.</div>
+      <div class="pill-group" role="radiogroup" aria-label="Version du maillot">
+        <label class="pill">
+          <input type="radio" name="version" value="Fan" required>
+          <span>Version Fan</span>
+        </label>
+        <label class="pill">
+          <input type="radio" name="version" value="Joueur">
+          <span>Version Joueur</span>
+        </label>
+      </div>
+      <div class="error-msg" id="err-version">Choisis une version.</div>
+    </div>
+
+    <div class="field-block">
+      <span class="field-num">03 — LE FLOCAGE</span>
+      <label class="field-label">Avec ou sans flocage ?</label>
+      <div class="field-hint">Nom et numéro floqués dans le dos, comme sur un vrai maillot de match.</div>
+      <div class="pill-group" role="radiogroup" aria-label="Flocage">
+        <label class="pill">
+          <input type="radio" name="flocage" value="Sans flocage" required>
+          <span>Sans flocage</span>
+        </label>
+        <label class="pill">
+          <input type="radio" name="flocage" value="Avec flocage">
+          <span>Avec flocage</span>
+        </label>
+      </div>
+      <div class="error-msg" id="err-flocage">Précise si tu veux un flocage.</div>
+
+      <div class="sub-fields" id="flocageFields">
+        <div>
+          <label class="field-label" style="font-size:0.92rem" for="flocNom">Nom à floquer</label>
+          <input type="text" id="flocNom" name="flocNom">
+        </div>
+        <div>
+          <label class="field-label" style="font-size:0.92rem" for="flocNumero">Numéro</label>
+          <input type="text" id="flocNumero" name="flocNumero" inputmode="numeric" maxlength="2">
+        </div>
+      </div>
+    </div>
+
+    <div class="field-block">
+      <span class="field-num">04 — LA LIVRAISON</span>
+      <label class="field-label" for="ville">Dans quelle ville es-tu ?</label>
+      <input type="text" id="ville" name="ville" required>
+      <div class="error-msg" id="err-ville">Indique ta ville pour qu'on calcule la livraison.</div>
+
+      <div class="badge fast" id="badgeFast">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span>Tu es à Douala : livraison express en moins de 24h.</span>
+      </div>
+      <div class="badge standard" id="badgeStandard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="15" height="12" rx="2"/><path d="M16 10h3l3 3v5h-6z"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg>
+        <span>Hors de Douala : expédition sous 2 à 3 jours.</span>
+      </div>
+    </div>
+
+    <div class="field-block">
+      <span class="field-num">05 — TES COORDONNÉES</span>
+      <label class="field-label" for="prenom">Ton prénom</label>
+      <input type="text" id="prenom" name="prenom" required style="margin-bottom:10px;">
+      <div class="error-msg" id="err-prenom">Ton prénom nous aide à personnaliser l'échange.</div>
+
+      <label class="field-label" for="whatsapp">Ton numéro WhatsApp</label>
+      <div class="field-hint">On t'écrit ici pour finaliser la commande.</div>
+      <input type="tel" id="whatsapp" name="whatsapp" placeholder="+237 6XX XXX XXX" required>
+      <div class="error-msg" id="err-whatsapp">Un numéro WhatsApp valide est nécessaire.</div>
+    </div>
+
+    <div class="submit-wrap">
+      <button type="submit" class="cta">
+        Envoyer ma demande sur WhatsApp
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0012 0C5.4 0 .1 5.3.1 11.9c0 2.1.5 4.1 1.6 5.9L0 24l6.3-1.7c1.7.9 3.6 1.4 5.7 1.4 6.6 0 11.9-5.3 11.9-11.9 0-3.2-1.2-6.1-3.4-8.3zM12 21.7c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.8 1 1-3.7-.2-.4a9.7 9.7 0 01-1.5-5.2C2 6 6.4 1.6 12 1.6c2.6 0 5.1 1 6.9 2.9a9.7 9.7 0 012.9 6.9c0 5.7-4.5 10.3-9.8 10.3zm5.4-7.6c-.3-.1-1.7-.9-2-1s-.5-.1-.6.1-.6.8-.7.9-.3.2-.5.1a8 8 0 01-2.4-1.5 9 9 0 01-1.6-2c-.2-.3 0-.5.1-.6l.4-.5c.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5-.1-.1-.6-1.5-.8-2.1-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.3s1 2.7 1.1 2.9c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.6.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3z"/></svg>
+      </button>
+      <div class="reassure">Tu seras redirigé vers WhatsApp avec ta commande déjà pré-remplie.</div>
+    </div>
+
+  </form>
+</main>
+
+<footer>
+  Family Shop — maillots livrés partout au Cameroun.
+</footer>
+
+<script>
+  // ===== Remplace ce numéro par le vrai numéro WhatsApp de CAFOOT (format international, sans + ni espaces) =====
+  const WHATSAPP_NUMBER = "237600000000";
+
+  const form = document.getElementById('cafootForm');
+  const villeInput = document.getElementById('ville');
+  const badgeFast = document.getElementById('badgeFast');
+  const badgeStandard = document.getElementById('badgeStandard');
+  const flocageFields = document.getElementById('flocageFields');
+
+  function normalize(str){
+    return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+  }
+
+  villeInput.addEventListener('input', () => {
+    const v = normalize(villeInput.value);
+    if(v.length === 0){
+      badgeFast.classList.remove('show');
+      badgeStandard.classList.remove('show');
+      return;
+    }
+    if(v.includes('douala')){
+      badgeFast.classList.add('show');
+      badgeStandard.classList.remove('show');
+    } else {
+      badgeStandard.classList.add('show');
+      badgeFast.classList.remove('show');
+    }
+  });
+
+  document.querySelectorAll('input[name="flocage"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      if(radio.value === 'Avec flocage' && radio.checked){
+        flocageFields.classList.add('open');
+      } else if(radio.checked){
+        flocageFields.classList.remove('open');
+      }
+    });
+  });
+
+  function showError(id, condition){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.classList.toggle('show', condition);
+    return condition;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const equipe = document.getElementById('equipe').value.trim();
+    const version = form.querySelector('input[name="version"]:checked');
+    const flocage = form.querySelector('input[name="flocage"]:checked');
+    const flocNom = document.getElementById('flocNom').value.trim();
+    const flocNumero = document.getElementById('flocNumero').value.trim();
+    const ville = villeInput.value.trim();
+    const prenom = document.getElementById('prenom').value.trim();
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+
+    let hasError = false;
+    hasError = showError('err-equipe', equipe.length === 0) || hasError;
+    hasError = showError('err-version', !version) || hasError;
+    hasError = showError('err-flocage', !flocage) || hasError;
+    hasError = showError('err-ville', ville.length === 0) || hasError;
+    hasError = showError('err-prenom', prenom.length === 0) || hasError;
+    hasError = showError('err-whatsapp', whatsapp.replace(/[^0-9]/g, '').length < 8) || hasError;
+
+    if(hasError){
+      form.querySelector('.error-msg.show')?.closest('.field-block')?.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+
+    // ---- Evénement Pixel Meta : un lead qualifié vient de se déclarer ----
+    if(typeof fbq === 'function'){
+      fbq('track', 'Lead', {
+        content_name: equipe,
+        content_category: version.value,
+        flocage: flocage.value
+      });
+    }
+
+    let message = `Bonjour, je suis ${prenom}.\n`;
+    message += `Je suis intéressé(e) par un maillot ${equipe} (${version.value}).\n`;
+    if(flocage.value === 'Avec flocage'){
+      message += `Flocage souhaité : ${flocNom || '—'} / ${flocNumero || '—'}\n`;
+    } else {
+      message += `Sans flocage.\n`;
+    }
+    message += `Ville : ${ville}`;
+
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+
+    setTimeout(() => { window.location.href = url; }, 250);
+  });
+</script>
+
+</body>
+</html>
