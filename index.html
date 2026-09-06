@@ -279,6 +279,13 @@ src="https://www.facebook.com/tr?id=2041798790034263&ev=PageView&noscript=1"
     color:#8A6512;
     border:1px solid rgba(216,163,43,0.4);
   }
+  .badge.price{
+    background:rgba(21,61,40,0.07);
+    color:var(--pitch);
+    border:1px solid rgba(21,61,40,0.22);
+    font-size:0.95rem;
+    font-weight:800;
+  }
   .badge svg{flex-shrink:0;width:18px;height:18px;margin-top:1px;}
 
   .submit-wrap{
@@ -372,6 +379,10 @@ src="https://www.facebook.com/tr?id=2041798790034263&ev=PageView&noscript=1"
         </label>
       </div>
       <div class="error-msg" id="err-version">Choisis une version.</div>
+      <div class="badge price" id="versionPriceBadge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 9h.01M15 9h.01M9 15c1 1 2 1.5 3 1.5s2-.5 3-1.5"/></svg>
+        <span></span>
+      </div>
     </div>
 
     <div class="field-block">
@@ -389,6 +400,10 @@ src="https://www.facebook.com/tr?id=2041798790034263&ev=PageView&noscript=1"
         </label>
       </div>
       <div class="error-msg" id="err-flocage">Précise si tu veux un flocage.</div>
+      <div class="badge price" id="totalPriceBadge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 9h.01M15 9h.01M9 15c1 1 2 1.5 3 1.5s2-.5 3-1.5"/></svg>
+        <span></span>
+      </div>
 
       <div class="sub-fields" id="flocageFields">
         <div>
@@ -454,6 +469,39 @@ src="https://www.facebook.com/tr?id=2041798790034263&ev=PageView&noscript=1"
   const badgeFast = document.getElementById('badgeFast');
   const badgeStandard = document.getElementById('badgeStandard');
   const flocageFields = document.getElementById('flocageFields');
+  const versionPriceBadge = document.getElementById('versionPriceBadge');
+  const totalPriceBadge = document.getElementById('totalPriceBadge');
+
+  // ===== Grille tarifaire (en FCFA) =====
+  const BASE_PRICE = { Fan: 10000, Joueur: 15000 };
+  const FLOCAGE_SUPPLEMENT = 5000;
+
+  function formatFCFA(n){
+    return n.toLocaleString('fr-FR') + ' FCFA';
+  }
+
+  function updatePrices(){
+    const version = form.querySelector('input[name="version"]:checked');
+    const flocage = form.querySelector('input[name="flocage"]:checked');
+
+    if(version){
+      versionPriceBadge.querySelector('span').textContent =
+        `Prix de base : ${formatFCFA(BASE_PRICE[version.value])}`;
+      versionPriceBadge.classList.add('show');
+    }
+
+    if(version && flocage){
+      const total = BASE_PRICE[version.value] + (flocage.value === 'Avec flocage' ? FLOCAGE_SUPPLEMENT : 0);
+      totalPriceBadge.querySelector('span').textContent = `Total à payer : ${formatFCFA(total)}`;
+      totalPriceBadge.classList.add('show');
+    } else {
+      totalPriceBadge.classList.remove('show');
+    }
+  }
+
+  document.querySelectorAll('input[name="version"]').forEach(radio => {
+    radio.addEventListener('change', updatePrices);
+  });
 
   function normalize(str){
     return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
@@ -482,6 +530,7 @@ src="https://www.facebook.com/tr?id=2041798790034263&ev=PageView&noscript=1"
       } else if(radio.checked){
         flocageFields.classList.remove('open');
       }
+      updatePrices();
     });
   });
 
@@ -533,6 +582,8 @@ src="https://www.facebook.com/tr?id=2041798790034263&ev=PageView&noscript=1"
     } else {
       message += `Sans flocage.\n`;
     }
+    const totalPrix = BASE_PRICE[version.value] + (flocage.value === 'Avec flocage' ? FLOCAGE_SUPPLEMENT : 0);
+    message += `Prix : ${formatFCFA(totalPrix)}\n`;
     message += `Ville : ${ville}`;
 
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
